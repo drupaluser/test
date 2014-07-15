@@ -1,0 +1,7 @@
+name = My form
+description = custom module to add page with own web-form
+version = 7.x-1.x-dev
+core = 7.x
+package = Features
+dependencies[] = author_content_type
+dependencies[] = books_content_type

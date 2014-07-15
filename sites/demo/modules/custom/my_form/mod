@@ -1,0 +1,187 @@
+<?php
+   /**
+   * Implements hook_menu().
+   */
+  function my_form_menu() {
+    $items = array();
+    $items['admin/content/generation'] = array(
+      'title' => 'Generation content',
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('page_form'),
+      'access callback' => 'user_access',
+      'access arguments' => array('administer site configuration'),
+    );
+    return $items;
+  }
+
+  /**
+   * Build generation form.
+   */
+  function page_form($form, &$form_state) {
+    $form = array();
+    $form['selected'] = array(
+      '#type' => 'select',
+      '#title' => t('What CT to create?'),
+      '#options' => array(
+        1 => t('Authors'),
+        2 => t('Books'),
+      ),
+      '#default_value' => variable_get('select_type', ''),
+    );
+
+    $form['number'] = array(
+        '#type' => 'textfield',
+        '#title' => t('How many units to create?'),
+        '#size' => 5,
+        '#default_value' => variable_get('number', ''),
+
+    );
+
+    $form['checkboxes'] = array(
+        '#type' => 'checkboxes',
+        '#title' => t('Additional settings'),
+        '#options' => drupal_map_assoc(array(
+          1 => t('Random title'),
+          2 => t('Random body'),
+          3 => t('Create dependens between Books and Authors'),
+        )),
+        '#default_value' => variable_get('checkboxes', ''),
+      );
+
+    $form['submit'] = array(
+        '#type' => 'submit',
+        '#value' => t('Create'),
+      );
+
+    return $form;
+  }
+
+  /**
+   * Form validation for page_form().
+   */
+  function page_form_validate($form, $form_state) {
+    if (!is_numeric($form_state['values']['number'])) {
+      form_set_error('number');
+    }
+  }
+
+  function page_form_submit($form, &$form_state) {
+    variable_set('select_type', $form_state['values']['selected']);
+    variable_set('number', $form_state['values']['number']);
+    variable_set('checkboxes', $form_state['values']['checkboxes']);
+
+    $limit = variable_get('number');
+    $settings = variable_get('checkboxes');
+    $content_type = variable_get('select_type');
+
+    $body_text_random = array(
+        0 => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent elit dolor, semper malesuada felis eget, porta posuere est. Aenean pulvinar cursus felis. Phasellus velit sapien, vehicula id rutrum at, sollicitudin sed odio. Curabitur convallis suscipit odio id lobortis. Suspendisse ac aliquam nisi. Etiam in tincidunt ipsum, sed feugiat urna. In vitae est a tellus mollis sollicitudin.',
+        1 => 'Donec sapien odio, feugiat id tortor sed, placerat tristique purus. Vivamus aliquet ligula nec dolor sodales, sed ullamcorper orci congue. Donec ultricies dictum nisl non sodales. Donec at augue a lorem scelerisque rhoncus. Aliquam ullamcorper sagittis posuere. Donec egestas, ante viverra aliquam congue, neque risus imperdiet magna, non consectetur ligula velit ut velit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Quisque vitae enim lacinia, scelerisque felis non, pellentesque lectus.',
+        2 => 'Praesent ultrices aliquam tortor sit amet ullamcorper. Praesent sed suscipit mauris. Praesent dapibus mauris massa, nec semper erat eleifend quis. Nam consequat auctor posuere. Ut velit sem, egestas quis pharetra at, facilisis sit amet nunc. Vivamus aliquet sem et rutrum facilisis. Quisque non leo dictum, placerat enim in, dignissim velit. Aliquam eget imperdiet lectus, non imperdiet nunc. Mauris vulputate turpis at sem lobortis, quis venenatis risus egestas. Etiam cursus mauris dapibus suscipit lacinia. Duis at lectus est. Nunc aliquam tristique odio, ut bibendum nunc mattis ut. In varius urna dignissim quam rhoncus tincidunt. Vivamus sagittis lorem vel ipsum adipiscing scelerisque. Donec malesuada dolor sit amet placerat laoreet. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;',
+        3 => 'Aenean vel purus eu urna pretium consequat quis eget neque. Phasellus et quam non augue malesuada rhoncus. Ut sollicitudin, enim et mollis facilisis, purus lacus suscipit quam, blandit posuere lacus libero ac turpis. Proin magna sapien, dignissim ut elit eu, suscipit fringilla purus. Maecenas iaculis varius facilisis. Pellentesque dictum risus nec tellus gravida rhoncus. Cras tincidunt odio dapibus augue interdum, a tincidunt leo pharetra. Duis eleifend arcu at dapibus faucibus. Cras aliquet tellus a ipsum ultricies viverra non sed mi. Nunc facilisis, nisi eget vehicula cursus, magna ante pretium mauris, a cursus quam augue ullamcorper sapien. Aenean non ante consectetur, auctor libero at, dapibus sapien. Nam ut lacus eu lectus convallis ullamcorper vel ut risus.',
+        4 => 'Fusce diam purus, accumsan non elit non, placerat interdum odio. Vestibulum vehicula lorem vel euismod rutrum. Maecenas euismod ac velit eleifend dignissim. Integer non sem at leo convallis luctus ac eu sem. Quisque id arcu vel mi consequat iaculis vitae a ipsum. Phasellus consectetur non est a suscipit. Integer porttitor nisi quis accumsan auctor. Vivamus nec tellus nec nisi vestibulum tempor sed nec neque. Integer posuere tellus leo. Aenean ut nisi eget enim vehicula congue vel in diam. Sed sed vehicula ante, sed sollicitudin enim. Quisque placerat sodales velit, eget tempor tellus pellentesque vel. Suspendisse vel nibh at elit cursus auctor eget non quam. Aliquam ut risus et quam molestie mattis. Mauris a facilisis justo.',
+        );
+    $b_r = rand(0, 4);
+
+    if ($content_type == 1) {
+      for ($i = 1; $i <= $limit; $i++) {
+        $node = new stdClass();
+        $body_text = 'Some text';
+        $file_path = drupal_realpath('/var/www/drupal7/sites/demo/modules/custom/my_form/stieg_1701200c[1].jpg');
+        $file = (object) array(
+              'uid' => 1,
+               'uri' => $file_path,
+              'filemime' => file_get_mimetype($file_path),
+              'status' => 1,
+        );
+        $node->type = 'author';
+        node_object_prepare($node);
+          if ($settings['Random title'] != '0') {
+              $random = rand(1000, 99999);
+              $node->title    = 'Author - ' . $random;
+          } else {
+              $node->title    = 'Author';
+          }
+        $node->language = LANGUAGE_NONE;
+          if ($settings['Random body'] != '0') {
+              $node->body[$node->language][0]['value']   = $body_text_random[$b_r];
+              $node->body[$node->language][0]['format']  = 'filtered_html';
+          } else {
+              $node->body[$node->language][0]['value']   = $body_text;
+              $node->body[$node->language][0]['format']  = 'filtered_html';
+          }
+        $file = file_copy($file, 'public://authors');
+        $node->field_photo[$node->language][0] = (array) $file;
+        $node->field_birthdate[$node->language][0]['value'] = "2011-05-25";
+        $path = 'content/author' . date('YmdHis') . $i;
+        $node->path = array('alias' => $path);
+        node_save($node);
+      }
+    }
+
+    if ($content_type == 2) {
+      for ($i = 1; $i <= $limit; $i++) {
+        $node = new stdClass();
+        $body_text = 'This is the description for content type books.';
+        $file_path_book = drupal_realpath('/var/www/drupal7/sites/demo/modules/custom/my_form/default_testpage.pdf');
+        $file_path = drupal_realpath('/var/www/drupal7/sites/demo/modules/custom/my_form/hungergamesbook.jpg');
+        $file = (object) array(
+            'uid' => 1,
+            'uri' => $file_path,
+            'filemime' => file_get_mimetype($file_path),
+            'status' => 1,
+          );
+        $file_book = (object) array(
+              'uid' => 1,
+              'uri' => $file_path_book,
+              'filemime' => file_get_mimetype($file_path_book),
+              'status' => 1,
+          );
+        $node->type = 'books';
+        node_object_prepare($node);
+          if ($settings['Random title'] != '0') {
+              $random = rand(1000, 99999);
+              $node->title    = 'Book - ' . $random;
+          } else {
+                $node->title    = 'Book';
+          }
+        $node->language = LANGUAGE_NONE;
+          if ($settings['Random body'] != '0') {
+            $node->body[$node->language][0]['value']   = $body_text_random[$b_r];
+            $node->body[$node->language][0]['format']  = 'filtered_html';
+          } else {
+            $node->body[$node->language][0]['value']   = $body_text;
+            $node->body[$node->language][0]['format']  = 'filtered_html';
+          }
+        $file = file_copy($file, 'public://image_books');
+        $file_book = file_copy($file_book, 'public://books');
+        $node->field_file[$node->language][0] = (array) $file_book;
+        $node->field_file[$node->language][0]['fid'] = $file_book->fid;
+        $node->field_file[$node->language][0]['display'] = 1;
+        $node->field_image_book[$node->language][0] = (array) $file;
+        $node->field_year[$node->language][0]['value'] = "1999-07-11";
+
+        $tax = taxonomy_vocabulary_machine_name_load('Publisher');
+        //$tree = taxonomy_get_tree($tax->vid, 0, NULL, TRUE);
+        //$tax_keys = array_keys($tree);
+        //$node->field_publisher[$node->language][]['tid'] = array_rand($tax_keys, 1);
+
+        $tree = db_query("SELECT tid FROM {taxonomy_term_data} WHERE $tax->vid ORDER BY RAND() LIMIT 1");
+          foreach ($tree as $row) {
+              $tax_id = $row->tid;
+          }
+        $node->field_publisher[$node->language][]['tid'] = $tax_id;
+        $path = 'content/books' . date('YmdHis');
+          if ($settings['Create dependens between Books and Authors'] != '0') {
+            $results = db_query("SELECT nid FROM {node} WHERE type = 'Author' ORDER BY RAND() LIMIT 1");
+            foreach ($results as $row) {
+              $node_id = $row->nid;
+            }
+            $node->field_author[$node->language][0]['target_id'] = $node_id;
+          }
+        $node->path = array('alias' => $path);
+        node_save($node);
+      }
+    }
+  }
+
