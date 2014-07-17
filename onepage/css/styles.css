@@ -1,0 +1,95 @@
+body {
+  margin: 0;
+  background-image: url('../images/background.png');
+}
+section {
+  width: 960px;
+  margin: 0 auto;
+  border-bottom: 1px solid #f81523;
+  padding: 20px 5px;
+  background: rgba(255, 255, 255, 0.57);
+}
+section h3 {
+  margin: 0 0 10px 0;
+
+}
+section p {
+  text-align:justify;
+}
+section p iframe {
+  float: right;
+  margin: 0 0 10px 10px;
+}
+section h3 {
+  text-align: center;
+}
+#menu {
+  width: 295px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  margin: 0 10px 10px 10px;
+  display: inline-block;
+  padding: 0;
+  text-align: center;
+  background: #03c7ff;
+
+}
+#menu a {
+  display: block;
+  padding: 10px 0;
+  height: 100%;
+}
+#menu:hover {
+  background-color: #02cccc;
+}
+.clear {
+  clear: left;
+}
+#work {
+  text-align: center;
+}
+
+#work a{
+  text-decoration: none;
+}
+
+
+#contacts {
+  overflow: auto;
+}
+#contacts .map {
+  float: right;
+}
+.messages {
+  margin-top: 40px;
+}
+
+.messages input[type='text'], input[type='email'] {
+  height: 40px;
+  border: 1px solid #B8B8B8;
+  width: 260px;
+  margin-bottom: 10px;
+  padding: 5px 5px;
+  font: 16px Helvetica, Arial, sans-serif;
+}
+
+.messages input[type='submit'] {
+  border: none;
+  background: #03c7ff;
+  height: 40px;
+  width: 272px;
+  font: 17px Helvetica, Arial, sans-serif;
+}
+.messages input[type='submit']:hover {
+  cursor: pointer;
+  background: #02cccc;
+}
+
+footer {
+  width:960px;
+  margin: 0 auto;
+}
+
+footer #share {
+  float: right;
+}
