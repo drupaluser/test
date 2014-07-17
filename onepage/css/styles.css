@@ -53,7 +53,13 @@ section h3 {
   text-decoration: none;
 }
 
-
+#work img {
+  max-width: 900px;
+}
+#images_thumbnails img {
+  padding: 3px;
+  border: 1px solid #CCC;
+}
 #contacts {
   overflow: auto;
 }
@@ -93,3 +99,8 @@ footer {
 footer #share {
   float: right;
 }
+
+.ui-widget-content {
+  border: none !important;
+  background: none !important;
+ }
