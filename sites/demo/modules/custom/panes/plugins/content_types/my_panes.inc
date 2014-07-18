@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * @file
+ * This is the file with parameters for Module My Panes.
+ *
+ * Plugins are described by creating a $plugin array which will be used
+ * by the system that includes this file.
+ */
 $plugin = array(
   'title' => t('My panes plugin'), // Название плагина, отображаемое при его выборе.
   'description' => t('My panes plugin'), // Описание плагина, отображаемое при его выборе.
@@ -36,14 +42,10 @@ function my_panes_edit_form($form, &$form_state) {
  * Submit callback for the example_text_edit_form().
  */
 function my_panes_edit_form_submit($form, &$form_state) {
-
-   foreach (array('text', 'radio') as $key) {
+  foreach (array('text', 'radio') as $key) {
     $form_state['conf'][$key] = $form_state['values'][$key];
   }
-
 }
-
-
 
 /**
  * Render callback for the content type.
@@ -76,4 +78,3 @@ function my_panes_admin_info($subtype, $conf, $contexts) {
     return $block;
   }
 }
-

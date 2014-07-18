@@ -1,7 +1,8 @@
 <?php
+
 /**
  * @file
- * Panes with Radio from for Panels
+ * Panes with body for text and the possibility to add a radio to your site. For Panels
  */
 
 /**
