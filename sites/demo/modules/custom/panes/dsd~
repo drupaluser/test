@@ -1,0 +1,71 @@
+<?php
+
+$plugin = array(
+  'title' => t('My panes plugin'), // Название плагина, отображаемое при его выборе.
+  'description' => t('My panes plugin'), // Описание плагина, отображаемое при его выборе.
+  'render callback' => 'my_panes_content_type_render', // Функция, которая будет формировать и выводить содержимое плагина.
+  'edit form' => 'my_panes_edit_form', // Форма с настройками плагина.
+  'category' => t('My panes'), // Категория, в которой будет находиться плагин.
+  'required context' => new ctools_context_required(t('Node'), 'node'),
+  'all contexts' => TRUE, // Флаг, указывающий, что плагину будут доступны все контексты.
+  'single' => TRUE, // Флаг, указывающий является ли плагин подтипом другого.
+);
+
+/**
+ * 'Edit form' callback for the content type.
+ */
+function my_panes_edit_form($form, &$form_state) {
+  // Получаем ранее введенные настройки.
+  $conf = $form_state['conf'];
+
+  $form['text'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Custom text'),
+    '#default_value' => $conf['text'],
+  );
+
+  $form['selected'] = array (
+  '#type' => 'select',
+  '#title' => t('Would You like to add radio?'),
+  '#options' => array(
+      1 => t('Yes'),
+      2 => t('No'),
+    ),
+  '#default_value' => $conf['selected'],
+);
+
+  return $form;
+}
+
+/**
+ * Submit callback for the example_text_edit_form().
+ */
+function my_panes_edit_form_submit($form, &$form_state) {
+
+   foreach (array_keys($form_state['plugin']['defaults']) as $key) {
+    if (isset($form_state['values'][$key])) {
+      $form_state['conf'][$key] = $form_state['values'][$key];
+    }
+  }
+
+
+
+
+}
+
+/**
+ * Render callback for the content type.
+ */
+function my_panes_content_type_render($subtype, $conf, $args, $context){
+
+if (!empty($contexts)) {
+    $content = ctools_context_keyword_substitute($conf['text'], array(), $contexts);
+  }
+
+  $block = new stdClass();
+  $block->content = $content;
+
+
+  return $block;
+}
+

@@ -23,6 +23,41 @@ section p iframe {
 section h3 {
   text-align: center;
 }
+#nav {
+  position: fixed;
+  top: 20%;
+}
+#nav ul {
+  padding: 0;
+  margin-left: 10px;
+}
+#nav li {
+  list-style: none;
+  margin-bottom: 20px;
+  background: rgba(255, 255, 255, 0.57);
+  border-radius: 5px;
+}
+#nav li:hover {
+  background: rgba(151, 151, 151, 0.1);
+  color: #000;
+}
+
+.active {
+  background: rgba(151, 151, 151, 0.77);
+  color: #000;
+  border-radius: 5px;
+}
+
+#nav li a {
+  text-decoration: none;
+  display: block;
+  padding: 10px;
+  color: #000;
+}
+#nav li a:hover {
+  background: rgba(151, 151, 151, 0.1);
+}
+
 #menu {
   width: 295px;
   border: 1px solid #ccc;
@@ -104,3 +139,5 @@ footer #share {
   border: none !important;
   background: none !important;
  }
+
+
