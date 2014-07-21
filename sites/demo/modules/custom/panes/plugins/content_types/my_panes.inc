@@ -25,9 +25,9 @@ function my_panes_edit_form($form, &$form_state) {
   $conf = $form_state['conf'];
 
   $form['text'] = array(
-      '#type' => 'textarea',
-      '#title' => t('Body'),
-      '#default_value' => $conf['text'],
+    '#type' => 'textarea',
+    '#title' => t('Body'),
+    '#default_value' => $conf['text'],
   );
 
   $form['radio'] = array(
@@ -35,6 +35,7 @@ function my_panes_edit_form($form, &$form_state) {
     '#title' => t('Add radio!'),
     '#default_value' => $conf['radio'],
   );
+
   return $form;
 }
 
